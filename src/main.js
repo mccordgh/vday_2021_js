@@ -1,10 +1,12 @@
 
 const canvas = document.querySelector(".canvas");
 const canvasRightOverlay = document.querySelector(".canvas-right-overlay");
+const canvasBottomTextWrapper = document.querySelector(".canvas-bottom-text--wrapper");
 const canvasBottomText = document.querySelector(".canvas-bottom-text");
 let canvasBottomTextCursor = document.querySelector(".canvas-bottom-text-cursor");
 
 let gameInterval;
+
 
 const background = new Image();
 background.src = "assets/nss_lunchroom.png";
@@ -20,29 +22,52 @@ let text = "Hello world testing testing lorem ipsum ipsum ipsum";
 const GameStates = Object.freeze({
     WaitingForInput: 0,
     RollingOutText: 1,
+    Next: 2,
+});
+
+const EventTypes = Object.freeze({
+    Click: "click",
 });
 
 let gameState = GameStates.RollingOutText;
+canvasBottomTextWrapper.classList.remove("hidden");
 // let gameState = GameStates.RollingOutText;
 
 let cursorCount = 0;
-const toggleCursor = () => {
+const toggleCursor = (hide) => {
+    if (hide !== undefined) {
+        if (hide) {
+            canvasBottomTextCursor.classList.add("hidden");
+        } else {
+            canvasBottomTextCursor.classList.remove("hidden");
+        }
+
+        return;
+    }
+
     cursorCount++;
 
     if (cursorCount >= 20) {
-        console.log("TOGGLE")
         canvasBottomTextCursor.classList.toggle("hidden");
 
         cursorCount = 0;
     }
 }
 
-const gameUpdate = () => {
+const updateText = () => {
+    canvasBottomText.innerHTML += text[0];
+    text = text.substr(1, text.length - 1);
+}
+
+const clearText = () => {
+    canvasBottomText.innerHTML = "";
+}
+
+const gameUpdate = (event) => {
     switch (gameState) {
         case GameStates.RollingOutText:
             if (text.length > 0) {
-                canvasBottomText.innerHTML += text[0];
-                text = text.substr(1, text.length - 1);
+               updateText();
             } else {
                 gameState = GameStates.WaitingForInput;
             }
@@ -50,6 +75,13 @@ const gameUpdate = () => {
             break;
 
         case GameStates.WaitingForInput:
+            if (event && event.type === EventTypes.Click) {
+                toggleCursor(true);
+                clearText();
+                canvasBottomTextWrapper.classList.add("hidden");
+
+                gameState = GameStates.Next;
+            }
             toggleCursor();
             break;
     }
@@ -64,6 +96,9 @@ const gameCleanup = () => {
 }
 
 gameInterval = setInterval(gameUpdate, 30);
+
+document.addEventListener("click", gameUpdate);
+
 
 // const fps = 60;
 // const timePerTick = 1000 / fps;
