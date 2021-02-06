@@ -36,15 +36,36 @@ img {
     background-position-x: left;
 }
 
-.canvas-right-overlay {
-    /* background-color: green; */
+.canvas-overlay--wrapper {
     display: flex;
-    align-items: flex-end;
-    position: absolute;
-    right: 0;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
     height: 100%;
-    width: 33%;
-    min-width: 400px;
+    position: absolute;
+    z-index: 98;
+    top: 0;
+    left: 0;
+}
+
+.canvas-overlay {
+    display: flex;
+    flex: 0.33;
+    height: 100%;
+    max-width: 25%;
+    background-size: contain;
+}
+
+.canvas-overlay--right {
+    align-items: flex-end;
+}
+
+.canvas-overlay--center {
+    align-items: center;
+}
+
+.canvas-overlay--left {
+    align-items: flex-start;
 }
 
 .canvas-bottom-text--wrapper {

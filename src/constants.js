@@ -2,9 +2,10 @@
 export const GameStates = Object.freeze({
   WaitingForClick: 'WaitingForClick',
   RollingOutText: 'RollingOutText',
-  Next: 'Next',
+  NextScene: 'NextScene',
   WaitingForChoice: 'WaitingForChoice',
   LoadingScene: 'LoadingScene',
+  Test: 'Test',
 });
 
 export const EventTypes = Object.freeze({
@@ -23,6 +24,7 @@ export const Actors = Object.freeze({
 
 export const SceneNames = Object.freeze({
   NssLunchRoom: 'NSS Lunch Room',
+  OldNssParkingLot: 'NSS Parking Lot',
 });
 
 export const AssetsDir = 'assets';

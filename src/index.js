@@ -4,30 +4,25 @@ import {
 } from './constants';
 import { findScene } from './scene-manager';
 
-// const canvas = document.querySelector(".canvas");
-// const canvasRightOverlay = document.querySelector(".canvas-right-overlay");
-// const canvasBottomTextWrapper = document.querySelector(".canvas-bottom-text--wrapper");
-// const canvasBottomText = document.querySelector(".canvas-bottom-text");
-// let canvasBottomTextCursor = document.querySelector(".canvas-bottom-text-cursor");
-
-const currentScene = findScene(SceneNames.NssLunchRoom);
+// init all the game vars and build out DOM
+let currentScene = findScene(SceneNames.NssLunchRoom);
 let running = true;
-
-// <div class="canvas">
-//     <div class="canvas-right-overlay">
-//     </div>
-
-//     <div class="canvas-bottom-text--wrapper hidden">
-//         <div class="canvas-bottom-text"></div>
-//         <div class="canvas-bottom-text-cursor"></div>
-//     </div>
-// </div>
+let cursorDelayCount = 0;
 
 const canvas = document.createElement('div');
 canvas.classList.add('canvas', 'img-parent');
 
+const canvasOverlayWrapper = document.createElement('div');
+canvasOverlayWrapper.classList.add('canvas-overlay--wrapper');
+
 const canvasRightOverlay = document.createElement('div');
-canvasRightOverlay.classList.add('canvas-right-overlay', 'img-parent');
+canvasRightOverlay.classList.add('canvas-overlay', 'canvas-overlay--right', 'img-parent');
+
+const canvasCenterOverlay = document.createElement('div');
+canvasCenterOverlay.classList.add('canvas-overlay', 'canvas-overlay--center', 'img-parent');
+
+const canvasLeftOverlay = document.createElement('div');
+canvasLeftOverlay.classList.add('canvas-overlay', 'canvas-overlay--left', 'img-parent');
 
 const canvasBottomTextWrapper = document.createElement('div');
 canvasBottomTextWrapper.classList.add('canvas-bottom-text--wrapper');
@@ -41,12 +36,16 @@ canvasBottomTextCursor.classList.add('canvas-bottom-text-cursor');
 document.body.appendChild(canvas);
 document.body.appendChild(canvasBottomTextWrapper);
 
-canvas.appendChild(canvasRightOverlay);
+canvasOverlayWrapper.appendChild(canvasLeftOverlay);
+canvasOverlayWrapper.appendChild(canvasCenterOverlay);
+canvasOverlayWrapper.appendChild(canvasRightOverlay);
+
+canvas.appendChild(canvasOverlayWrapper);
 
 canvasBottomTextWrapper.appendChild(canvasBottomText);
 canvasBottomTextWrapper.appendChild(canvasBottomTextCursor);
 
-let cursorCount = 0;
+// main game logic and helper functions
 const toggleCursor = (hide) => {
   if (hide !== undefined) {
     if (hide) {
@@ -58,12 +57,12 @@ const toggleCursor = (hide) => {
     return;
   }
 
-  cursorCount += 1;
+  cursorDelayCount += 1;
 
-  if (cursorCount >= 20) {
+  if (cursorDelayCount >= 30) {
     canvasBottomTextCursor.classList.toggle('hidden');
 
-    cursorCount = 0;
+    cursorDelayCount = 0;
   }
 };
 
@@ -78,46 +77,94 @@ const clearText = () => {
 
 const assetsUrl = (name) => `url(${AssetsDir}/${name})`;
 
+const loadingSceneState = () => {
+  if (currentScene.background) {
+    canvas.style.backgroundImage = assetsUrl(currentScene.background);
+  }
+
+  if (currentScene.actors && currentScene.actors.length) {
+    currentScene.actors.forEach((actor) => {
+      // actor has { name, position, asset }
+      switch (actor.position) {
+        case ScenePositions.Left:
+          canvasLeftOverlay.style.backgroundImage = assetsUrl(actor.asset);
+          break;
+
+        case ScenePositions.Center:
+          canvasCenterOverlay.style.backgroundImage = assetsUrl(actor.asset);
+          break;
+
+        case ScenePositions.Right:
+          canvasRightOverlay.style.backgroundImage = assetsUrl(actor.asset);
+          break;
+
+        default:
+          throw new Error(`Unrecognized SCenePosition in LoadScene State: ${actor.position}`);
+      }
+    });
+  }
+
+  currentScene.sceneFlow.shift();
+};
+
+const rollingOutTextState = () => {
+  if (currentScene.text && currentScene.text[0] && currentScene.text[0].length) {
+    updateText();
+  } else {
+    currentScene.text.shift();
+    currentScene.sceneFlow.shift();
+  }
+};
+
+const waitingForClickState = (event) => {
+  if (event.type && event.type === EventTypes.Click) {
+    toggleCursor(true);
+    clearText();
+
+    currentScene.sceneFlow.shift();
+  }
+
+  toggleCursor();
+};
+
+const clearCurrentScene = () => {
+  canvas.style.backgroundImage = null;
+  canvasRightOverlay.style.backgroundImage = null;
+  canvasCenterOverlay.style.backgroundImage = null;
+  canvasLeftOverlay.style.backgroundImage = null;
+
+  clearText();
+}
+
+const nextSceneState = (name) => {
+  currentScene = findScene(name);
+};
+
 const gameUpdate = (event) => {
   switch (currentScene.sceneFlow[0]) {
     case GameStates.LoadingScene:
-      // debugger;
-      // canvas.style.backgroundColor = "blue";
-      if (currentScene.background) {
-        canvas.style.backgroundImage = assetsUrl(currentScene.background);
-      }
-
-      if (currentScene.actors && currentScene.actors.length) {
-        currentScene.actors.forEach((actor) => {
-          // actor has { name, position, asset }
-          if (actor.position === ScenePositions.Right) {
-            canvasRightOverlay.style.backgroundImage = assetsUrl(actor.asset);
-          }
-        });
-      }
-
-      currentScene.sceneFlow.shift();
+      loadingSceneState();
       break;
 
     case GameStates.RollingOutText:
-      if (currentScene.text && currentScene.text[0] && currentScene.text[0].length) {
-        updateText();
-      } else {
-        currentScene.text.shift();
-        currentScene.sceneFlow.shift();
-      }
-
+      rollingOutTextState();
       break;
 
     case GameStates.WaitingForClick:
-      if (event && event.type === EventTypes.Click) {
-        toggleCursor(true);
-        clearText();
-
-        currentScene.sceneFlow.shift();
+      if (!event) {
+        break;
       }
 
-      toggleCursor();
+      waitingForClickState(event);
+      break;
+
+    case GameStates.NextScene:
+      if (!currentScene.nextScene) {
+        throw new Error('currentScene has no nextScene to move to.');
+      }
+
+      clearCurrentScene();
+      nextSceneState(currentScene.nextScene);
       break;
 
     default:
@@ -129,6 +176,7 @@ const gameUpdate = (event) => {
 
 document.addEventListener('click', gameUpdate);
 
+// init gameloop vars
 const fps = 60;
 const timePerTick = 1000 / fps;
 let delta = 0;
