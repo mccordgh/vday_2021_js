@@ -10,9 +10,8 @@ import { findScene } from './scene-manager';
 // const canvasBottomText = document.querySelector(".canvas-bottom-text");
 // let canvasBottomTextCursor = document.querySelector(".canvas-bottom-text-cursor");
 
-let text;
 const currentScene = findScene(SceneNames.NssLunchRoom);
-let gameState = currentScene.sceneFlow[0];
+let running = true;
 
 // <div class="canvas">
 //     <div class="canvas-right-overlay">
@@ -118,7 +117,9 @@ const gameUpdate = (event) => {
       break;
 
     default:
-      throw new Error(`gameState case hit that wasn't expected: ${gameState}`);
+      running = false;
+
+      throw new Error(`currentScene case hit that wasn't expected: ${currentScene.sceneFlow}`);
   }
 };
 
@@ -132,7 +133,10 @@ let now = Date.now();
 let lastTime = Date.now();
 let timer = 0;
 
-const running = true;
+const gameCleanup = () => {
+  // eslint-disable-next-line no-console
+  console.log('Game Done');
+};
 
 const loop = () => {
   if (running) {
@@ -148,9 +152,11 @@ const loop = () => {
     }
 
     window.requestAnimationFrame(loop);
+
+    return;
   }
 
-//   gameCleanup();
+  gameCleanup();
 };
 
 loop();
