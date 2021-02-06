@@ -11,6 +11,7 @@ html, body {
 
 body {
     display: flex;
+    flex-direction: column;
     flex: 1;
     font-size: 10px;
 }
@@ -29,6 +30,12 @@ img {
     object-fit:none;
 }
 
+.img-parent {
+    background-repeat: no-repeat;
+    background-position-y: bottom;
+    background-position-x: left;
+}
+
 .canvas-right-overlay {
     /* background-color: green; */
     display: flex;
@@ -41,9 +48,7 @@ img {
 }
 
 .canvas-bottom-text--wrapper {
-    position: absolute;
-    height: 25%;
-    width: 100%;
+    flex: 0.25;
     left: 0;
     bottom: 0; 
 }

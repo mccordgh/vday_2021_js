@@ -10,9 +10,15 @@ const scenes = {
     ],
     text: [
       'Hello world testing testing lorem ipsum ipsum ipsum',
+      'Text 2 lots of fun',
+      'Text 3 weeeeeeeeee weeeeeeeeeeeeee weeeeeeeeeeeeeeeeeeeeeeeee weeeeeeee',
     ],
     sceneFlow: [
       GameStates.LoadingScene,
+      GameStates.RollingOutText,
+      GameStates.WaitingForClick,
+      GameStates.RollingOutText,
+      GameStates.WaitingForClick,
       GameStates.RollingOutText,
       GameStates.WaitingForClick,
       GameStates.Next,

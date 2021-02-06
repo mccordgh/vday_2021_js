@@ -24,10 +24,10 @@ let running = true;
 // </div>
 
 const canvas = document.createElement('div');
-canvas.classList.add('canvas');
+canvas.classList.add('canvas', 'img-parent');
 
 const canvasRightOverlay = document.createElement('div');
-canvasRightOverlay.classList.add('canvas-right-overlay');
+canvasRightOverlay.classList.add('canvas-right-overlay', 'img-parent');
 
 const canvasBottomTextWrapper = document.createElement('div');
 canvasBottomTextWrapper.classList.add('canvas-bottom-text--wrapper');
@@ -39,9 +39,9 @@ const canvasBottomTextCursor = document.createElement('div');
 canvasBottomTextCursor.classList.add('canvas-bottom-text-cursor');
 
 document.body.appendChild(canvas);
+document.body.appendChild(canvasBottomTextWrapper);
 
 canvas.appendChild(canvasRightOverlay);
-canvas.appendChild(canvasBottomTextWrapper);
 
 canvasBottomTextWrapper.appendChild(canvasBottomText);
 canvasBottomTextWrapper.appendChild(canvasBottomTextCursor);
@@ -76,18 +76,22 @@ const clearText = () => {
   canvasBottomText.innerHTML = '';
 };
 
+const assetsUrl = (name) => `url(${AssetsDir}/${name})`;
+
 const gameUpdate = (event) => {
   switch (currentScene.sceneFlow[0]) {
     case GameStates.LoadingScene:
+      // debugger;
+      // canvas.style.backgroundColor = "blue";
       if (currentScene.background) {
-        canvas.style.backgroundImage = AssetsDir + currentScene.background;
+        canvas.style.backgroundImage = assetsUrl(currentScene.background);
       }
 
       if (currentScene.actors && currentScene.actors.length) {
         currentScene.actors.forEach((actor) => {
           // actor has { name, position, asset }
           if (actor.position === ScenePositions.Right) {
-            canvasRightOverlay.style.backgroundImage = AssetsDir + actor.asset;
+            canvasRightOverlay.style.backgroundImage = assetsUrl(actor.asset);
           }
         });
       }
@@ -99,6 +103,7 @@ const gameUpdate = (event) => {
       if (currentScene.text && currentScene.text[0] && currentScene.text[0].length) {
         updateText();
       } else {
+        currentScene.text.shift();
         currentScene.sceneFlow.shift();
       }
 
@@ -108,7 +113,6 @@ const gameUpdate = (event) => {
       if (event && event.type === EventTypes.Click) {
         toggleCursor(true);
         clearText();
-        canvasBottomTextWrapper.classList.add('hidden');
 
         currentScene.sceneFlow.shift();
       }

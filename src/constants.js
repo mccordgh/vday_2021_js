@@ -25,4 +25,4 @@ export const SceneNames = Object.freeze({
   NssLunchRoom: 'NSS Lunch Room',
 });
 
-export const AssetsDir = 'assets/';
+export const AssetsDir = 'assets';
