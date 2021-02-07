@@ -1,13 +1,13 @@
 // fake enums !!
 export const GameStates = Object.freeze({
   WaitingForClick: 'WaitingForClick',
-  RollingOutText: 'RollingOutText',
+  PresentingText: 'PresentingText',
   NextScene: 'NextScene',
-  SetupChoices: 'SetupChoices',
+  PresentingChoices: 'PresentingChoices',
   WaitingForChoice: 'WaitingForChoice',
   LoadingScene: 'LoadingScene',
-  Test: 'Test',
-  IntroduceActor: 'IntroduceActor',
+  EnterActor: 'EnterActor',
+  ExitActor: 'ExitActor',
 });
 
 export const EventTypes = Object.freeze({
@@ -22,11 +22,14 @@ export const ScenePositions = Object.freeze({
 
 export const Actors = Object.freeze({
   Matt: 'Matt',
+  Charlie: 'Charlie',
+  Stella: 'Stella',
 });
 
 export const SceneNames = Object.freeze({
   NssLunchRoom: 'NSS Lunch Room',
   OldNssParkingLot: 'NSS Parking Lot',
+  NashvilleFairGrounds: 'NashvilleFairGrounds',
 });
 
 export const AssetsDir = 'assets';

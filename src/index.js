@@ -1,8 +1,9 @@
 import './main.css';
 import {
-  AssetsDir, DomClasses, EventTypes, GameStates, SceneNames, ScenePositions,
+  DomClasses, EventTypes, GameStates, SceneNames, ScenePositions,
 } from './constants';
-import { findScene } from './scene-manager';
+import findScene from './scene-manager';
+import { assetsUrl } from './helpers';
 
 // init all the game vars and build out DOM
 let currentScene = findScene(SceneNames.NssLunchRoom);
@@ -76,6 +77,7 @@ const toggleCursor = (hide) => {
 
 const updateText = () => {
   canvasBottomText.innerHTML += currentScene.text[0][0];
+
   currentScene.text[0] = currentScene.text[0].substr(1, currentScene.text[0].length - 1);
 };
 
@@ -83,9 +85,7 @@ const clearText = () => {
   canvasBottomText.innerHTML = '';
 };
 
-const assetsUrl = (name) => `url(${AssetsDir}/${name})`;
-
-const introduceActor = (actor) => {
+const enterActor = (actor) => {
   switch (actor.position) {
     case ScenePositions.Left:
       canvasLeftOverlay.style.backgroundImage = assetsUrl(actor.asset);
@@ -131,7 +131,7 @@ const loadingSceneState = () => {
   if (currentScene.actors && currentScene.actors.length) {
     currentScene.actors.forEach((actor) => {
       if (actor.appearsAtStart) {
-        introduceActor(actor);
+        enterActor(actor);
       }
     });
   }
@@ -139,7 +139,7 @@ const loadingSceneState = () => {
   advanceSceneFlow();
 };
 
-const rollingOutTextState = () => {
+const presentingTextState = () => {
   if (currentScene.text && currentScene.text[0] && currentScene.text[0].length) {
     updateText();
   } else {
@@ -172,9 +172,13 @@ const nextSceneState = (name) => {
   currentScene = findScene(name);
 };
 
-const findActorByName = (name) => currentScene.actors.find((actor) => actor.name === name);
+const findActorByName = (currentFlow) => {
+  const name = currentFlow.options.actor;
 
-const setupChoicesState = (currentFlow) => {
+  return currentScene.actors.find((actor) => actor.name === name);
+};
+
+const presentingChoicesState = (currentFlow) => {
   const { choices } = currentFlow.options;
 
   choices.forEach((choice) => {
@@ -197,8 +201,8 @@ const gameUpdate = (event) => {
       loadingSceneState();
       break;
 
-    case GameStates.RollingOutText:
-      rollingOutTextState();
+    case GameStates.PresentingText:
+      presentingTextState();
       break;
 
     case GameStates.WaitingForClick:
@@ -218,19 +222,19 @@ const gameUpdate = (event) => {
       nextSceneState(currentScene.nextScene);
       break;
 
-    case GameStates.IntroduceActor:
-      introduceActor(findActorByName(currentFlow.options.name));
+    case GameStates.EnterActor:
+      enterActor(findActorByName(currentFlow));
 
       advanceSceneFlow();
       break;
 
     case GameStates.ExitActor:
-      exitActor(findActorByName(currentFlow.options.name));
+      exitActor(findActorByName(currentFlow));
 
       advanceSceneFlow();
       break;
 
-    case GameStates.SetupChoices:
+    case GameStates.PresentingChoices:
       if (
         !currentFlow.options
         || !currentFlow.options.choices
@@ -241,7 +245,7 @@ const gameUpdate = (event) => {
         throw new Error("state SetupChoices currentScene doesn't have choices");
       }
 
-      setupChoicesState(currentFlow);
+      presentingChoicesState(currentFlow);
       advanceSceneFlow();
 
       break;
