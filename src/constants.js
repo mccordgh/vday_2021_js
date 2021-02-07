@@ -3,9 +3,11 @@ export const GameStates = Object.freeze({
   WaitingForClick: 'WaitingForClick',
   RollingOutText: 'RollingOutText',
   NextScene: 'NextScene',
+  SetupChoices: 'SetupChoices',
   WaitingForChoice: 'WaitingForChoice',
   LoadingScene: 'LoadingScene',
   Test: 'Test',
+  IntroduceActor: 'IntroduceActor',
 });
 
 export const EventTypes = Object.freeze({
@@ -28,3 +30,7 @@ export const SceneNames = Object.freeze({
 });
 
 export const AssetsDir = 'assets';
+
+export const DomClasses = Object.freeze({
+  CanvasBottomChoicesOption: 'canvas-bottom-choices--option',
+});

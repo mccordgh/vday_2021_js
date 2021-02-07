@@ -1,6 +1,6 @@
 import './main.css';
 import {
-  AssetsDir, EventTypes, GameStates, SceneNames, ScenePositions,
+  AssetsDir, DomClasses, EventTypes, GameStates, SceneNames, ScenePositions,
 } from './constants';
 import { findScene } from './scene-manager';
 
@@ -33,6 +33,9 @@ canvasBottomText.classList.add('canvas-bottom-text');
 const canvasBottomTextCursor = document.createElement('div');
 canvasBottomTextCursor.classList.add('canvas-bottom-text-cursor');
 
+const canvasBottomChoices = document.createElement('div');
+canvasBottomChoices.classList.add('canvas-bottom-choices');
+
 document.body.appendChild(canvas);
 document.body.appendChild(canvasBottomTextWrapper);
 
@@ -41,11 +44,16 @@ canvasOverlayWrapper.appendChild(canvasCenterOverlay);
 canvasOverlayWrapper.appendChild(canvasRightOverlay);
 
 canvas.appendChild(canvasOverlayWrapper);
+canvas.appendChild(canvasBottomChoices);
 
 canvasBottomTextWrapper.appendChild(canvasBottomText);
 canvasBottomTextWrapper.appendChild(canvasBottomTextCursor);
 
 // main game logic and helper functions
+const advanceSceneFlow = () => {
+  currentScene.sceneFlow.shift();
+};
+
 const toggleCursor = (hide) => {
   if (hide !== undefined) {
     if (hide) {
@@ -77,6 +85,44 @@ const clearText = () => {
 
 const assetsUrl = (name) => `url(${AssetsDir}/${name})`;
 
+const introduceActor = (actor) => {
+  switch (actor.position) {
+    case ScenePositions.Left:
+      canvasLeftOverlay.style.backgroundImage = assetsUrl(actor.asset);
+      break;
+
+    case ScenePositions.Center:
+      canvasCenterOverlay.style.backgroundImage = assetsUrl(actor.asset);
+      break;
+
+    case ScenePositions.Right:
+      canvasRightOverlay.style.backgroundImage = assetsUrl(actor.asset);
+      break;
+
+    default:
+      throw new Error(`Unrecognized ScenePosition in INtroduceActor State: ${actor.position}`);
+  }
+};
+
+const exitActor = (actor) => {
+  switch (actor.position) {
+    case ScenePositions.Left:
+      canvasLeftOverlay.style.backgroundImage = null;
+      break;
+
+    case ScenePositions.Center:
+      canvasCenterOverlay.style.backgroundImage = null;
+      break;
+
+    case ScenePositions.Right:
+      canvasRightOverlay.style.backgroundImage = null;
+      break;
+
+    default:
+      throw new Error(`Unrecognized ScenePosition in ExitActor State: ${actor.position}`);
+  }
+};
+
 const loadingSceneState = () => {
   if (currentScene.background) {
     canvas.style.backgroundImage = assetsUrl(currentScene.background);
@@ -84,27 +130,13 @@ const loadingSceneState = () => {
 
   if (currentScene.actors && currentScene.actors.length) {
     currentScene.actors.forEach((actor) => {
-      // actor has { name, position, asset }
-      switch (actor.position) {
-        case ScenePositions.Left:
-          canvasLeftOverlay.style.backgroundImage = assetsUrl(actor.asset);
-          break;
-
-        case ScenePositions.Center:
-          canvasCenterOverlay.style.backgroundImage = assetsUrl(actor.asset);
-          break;
-
-        case ScenePositions.Right:
-          canvasRightOverlay.style.backgroundImage = assetsUrl(actor.asset);
-          break;
-
-        default:
-          throw new Error(`Unrecognized SCenePosition in LoadScene State: ${actor.position}`);
+      if (actor.appearsAtStart) {
+        introduceActor(actor);
       }
     });
   }
 
-  currentScene.sceneFlow.shift();
+  advanceSceneFlow();
 };
 
 const rollingOutTextState = () => {
@@ -112,7 +144,7 @@ const rollingOutTextState = () => {
     updateText();
   } else {
     currentScene.text.shift();
-    currentScene.sceneFlow.shift();
+    advanceSceneFlow();
   }
 };
 
@@ -121,7 +153,7 @@ const waitingForClickState = (event) => {
     toggleCursor(true);
     clearText();
 
-    currentScene.sceneFlow.shift();
+    advanceSceneFlow();
   }
 
   toggleCursor();
@@ -134,14 +166,33 @@ const clearCurrentScene = () => {
   canvasLeftOverlay.style.backgroundImage = null;
 
   clearText();
-}
+};
 
 const nextSceneState = (name) => {
   currentScene = findScene(name);
 };
 
+const findActorByName = (name) => currentScene.actors.find((actor) => actor.name === name);
+
+const setupChoicesState = (currentFlow) => {
+  const { choices } = currentFlow.options;
+
+  choices.forEach((choice) => {
+    const choiceDiv = document.createElement('div');
+    choiceDiv.innerHTML = choice;
+    choiceDiv.classList.add(DomClasses.CanvasBottomChoicesOption);
+
+    canvasBottomChoices.appendChild(choiceDiv);
+  });
+};
+
+const clearChoices = () => {
+  canvasBottomChoices.innerHTML = null;
+};
+
 const gameUpdate = (event) => {
-  switch (currentScene.sceneFlow[0]) {
+  const [currentFlow] = currentScene.sceneFlow;
+  switch (currentFlow.state) {
     case GameStates.LoadingScene:
       loadingSceneState();
       break;
@@ -167,10 +218,50 @@ const gameUpdate = (event) => {
       nextSceneState(currentScene.nextScene);
       break;
 
+    case GameStates.IntroduceActor:
+      introduceActor(findActorByName(currentFlow.options.name));
+
+      advanceSceneFlow();
+      break;
+
+    case GameStates.ExitActor:
+      exitActor(findActorByName(currentFlow.options.name));
+
+      advanceSceneFlow();
+      break;
+
+    case GameStates.SetupChoices:
+      if (
+        !currentFlow.options
+        || !currentFlow.options.choices
+        || !currentFlow.options.choices.length
+      ) {
+        // eslint-disable-next-line no-console
+        console.log({ currentScene, currentFlow });
+        throw new Error("state SetupChoices currentScene doesn't have choices");
+      }
+
+      setupChoicesState(currentFlow);
+      advanceSceneFlow();
+
+      break;
+
+    case GameStates.WaitingForChoice:
+      if (event && event.type && event.type === EventTypes.Click) {
+        const { target } = event;
+
+        if (target.classList && target.classList.contains(DomClasses.CanvasBottomChoicesOption)) {
+          clearText();
+          clearChoices();
+          advanceSceneFlow();
+        }
+      }
+      break;
+
     default:
       running = false;
 
-      throw new Error(`currentScene case hit that wasn't expected: ${currentScene.sceneFlow}`);
+      throw new Error(`currentScene case hit that wasn't expected: ${currentScene.sceneFlow[0].state}`);
   }
 };
 

@@ -69,6 +69,7 @@ img {
 }
 
 .canvas-bottom-text--wrapper {
+    position: relative;
     flex: 0.25;
     left: 0;
     bottom: 0; 
@@ -91,6 +92,32 @@ img {
     bottom: 2rem;
     right: 2rem;
     z-index: 99;
+}
+
+.canvas-bottom-choices {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    align-items: flex-start;
+    justify-content: flex-start;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.canvas-bottom-choices--option {
+    background-color: rgba(255, 255, 255, 0.4);
+    font-size: 2rem;
+    padding: 2rem;
+    height: 100%;
+    width: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+
+.canvas-bottom-choices--option:hover {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .hidden {
