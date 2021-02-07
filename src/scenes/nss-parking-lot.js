@@ -2,7 +2,7 @@ import {
   Actors, SceneNames, ScenePositions,
 } from '../constants';
 import {
-  enterActor, exitActor, loadScene, nextScene, presentText, 
+  enterActor, exitActor, loadScene, nextScene, presentChoices, presentText, presentTextForChoice, 
 } from '../helpers';
 
 export default {
@@ -22,7 +22,9 @@ export default {
     'Matt: Go fetch boy!',
     'Charlie: Wooooooof!',
     'Matt: What a good boy! Look at him go!',
+    'Matt: You guys make a good duo. :)',
     'Matt: Well shall we go to the fairgrounds??',
+    'Matt: C\'mon! It\'ll be fun!',
   ],
   sceneFlow: [
     loadScene(),
@@ -34,6 +36,9 @@ export default {
     presentText(),
     exitActor(Actors.Charlie),
     presentText(),
+    presentText(),
+    presentTextForChoice(),
+    presentChoices(['That sounds good.', 'Hmm... I dunno...']),
     presentText(),
     nextScene(),
   ],

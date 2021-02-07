@@ -33,6 +33,9 @@ export default {
     'Stella: *scurries off*',
     'Matt: What a cute pooper! I hope we meet her again!',
     'Matt: So, tell me a bit more about yourself. :)',
+    'Matt: Very cool. You are way cooler than I realized at first :)',
+    'Matt: Well, in the past I was a musician. I\'m kind of looking forward to getting away from that whole scene for a good while, though.',
+    'Matt: Glad to be making a new friend (and a really cute one at that).',
   ],
   sceneFlow: [
     loadScene(),
@@ -49,7 +52,9 @@ export default {
     presentTextForChoice(),
     presentChoices(['I was in the music biz!', 'I love my Charlie!', 'I am an amazing plant mama!', 'I\'m from the amazing Pacific Northwest!']),
     presentText(),
+    presentText(),
+    presentText(),
     nextScene(),
   ],
-  nextScene: SceneNames.OldNssParkingLot,
+  nextScene: undefined,
 };
