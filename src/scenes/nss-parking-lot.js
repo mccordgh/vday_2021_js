@@ -2,7 +2,7 @@ import {
   Actors, SceneNames, ScenePositions,
 } from '../constants';
 import {
-  enterActor, exitActor, loadScene, nextScene, presentText, waitForClick,
+  enterActor, exitActor, loadScene, nextScene, presentText, 
 } from '../helpers';
 
 export default {
@@ -22,23 +22,19 @@ export default {
     'Matt: Go fetch boy!',
     'Charlie: Wooooooof!',
     'Matt: What a good boy! Look at him go!',
+    'Matt: Well shall we go to the fairgrounds??',
   ],
   sceneFlow: [
     loadScene(),
     presentText(),
-    waitForClick(),
     presentText(),
-    waitForClick(),
     enterActor(Actors.Charlie),
     presentText(),
-    waitForClick(),
     presentText(),
-    waitForClick(),
     presentText(),
-    waitForClick(),
     exitActor(Actors.Charlie),
     presentText(),
-    waitForClick(),
+    presentText(),
     nextScene(),
   ],
   nextScene: SceneNames.NashvilleFairGrounds,

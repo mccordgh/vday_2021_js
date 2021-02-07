@@ -2,7 +2,11 @@ import {
   Actors, SceneNames, ScenePositions,
 } from '../constants';
 import {
-  loadScene, nextScene, presentChoices, presentText, waitForChoice, waitForClick,
+  loadScene,
+  nextScene,
+  presentChoices,
+  presentText,
+  presentTextForChoice,
 } from '../helpers';
 
 export default {
@@ -20,12 +24,9 @@ export default {
   sceneFlow: [
     loadScene(),
     presentText(),
-    waitForClick(),
-    presentText(),
+    presentTextForChoice(),
     presentChoices(['Sure that sounds fun!', 'Yea! Lets get Charlie!']),
-    waitForChoice(),
     presentText(),
-    waitForClick(),
     nextScene(),
   ],
   nextScene: SceneNames.OldNssParkingLot,

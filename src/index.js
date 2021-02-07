@@ -3,7 +3,7 @@ import {
   DomClasses, EventTypes, GameStates, SceneNames, ScenePositions,
 } from './constants';
 import findScene from './scene-manager';
-import { assetsUrl } from './helpers';
+import { assetsUrl, waitForChoice, waitForClick } from './helpers';
 
 // init all the game vars and build out DOM
 let currentScene = findScene(SceneNames.NssLunchRoom);
@@ -139,12 +139,16 @@ const loadingSceneState = () => {
   advanceSceneFlow();
 };
 
-const presentingTextState = () => {
+const presentingTextState = (advanceToWaitingForClick) => {
   if (currentScene.text && currentScene.text[0] && currentScene.text[0].length) {
     updateText();
   } else {
     currentScene.text.shift();
     advanceSceneFlow();
+
+    if (advanceToWaitingForClick) {
+      currentScene.sceneFlow.unshift(waitForClick());
+    }
   }
 };
 
@@ -201,8 +205,9 @@ const gameUpdate = (event) => {
       loadingSceneState();
       break;
 
+    case GameStates.PresentingTextForChoice:
     case GameStates.PresentingText:
-      presentingTextState();
+      presentingTextState(currentFlow.state === GameStates.PresentingText);
       break;
 
     case GameStates.WaitingForClick:
@@ -240,13 +245,12 @@ const gameUpdate = (event) => {
         || !currentFlow.options.choices
         || !currentFlow.options.choices.length
       ) {
-        // eslint-disable-next-line no-console
-        console.log({ currentScene, currentFlow });
         throw new Error("state SetupChoices currentScene doesn't have choices");
       }
 
       presentingChoicesState(currentFlow);
       advanceSceneFlow();
+      currentScene.sceneFlow.unshift(waitForChoice());
 
       break;
 
@@ -265,6 +269,8 @@ const gameUpdate = (event) => {
     default:
       running = false;
 
+      // eslint-disable-next-line no-console
+      console.log(currentScene);
       throw new Error(`currentScene case hit that wasn't expected: ${currentScene.sceneFlow[0].state}`);
   }
 };

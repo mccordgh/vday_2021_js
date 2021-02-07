@@ -2,6 +2,7 @@
 export const GameStates = Object.freeze({
   WaitingForClick: 'WaitingForClick',
   PresentingText: 'PresentingText',
+  PresentingTextForChoice: 'PresentingTextForChoice',
   NextScene: 'NextScene',
   PresentingChoices: 'PresentingChoices',
   WaitingForChoice: 'WaitingForChoice',

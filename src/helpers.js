@@ -7,6 +7,7 @@ export const exitActor = (actor) => ({ state: GameStates.ExitActor, options: { a
 export const loadScene = () => ({ state: GameStates.LoadingScene });
 export const nextScene = () => ({ state: GameStates.NextScene });
 export const presentText = () => ({ state: GameStates.PresentingText });
+export const presentTextForChoice = () => ({ state: GameStates.PresentingTextForChoice });
 export const presentChoices = (choices) => ({
   state: GameStates.PresentingChoices,
   options: { choices },
