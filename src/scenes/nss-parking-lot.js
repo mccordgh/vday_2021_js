@@ -24,7 +24,7 @@ export default {
     },
     {
       name: Actors.Charlie,
-      position: ScenePositions.Center,
+      position: ScenePositions.Right,
       asset: ActorAssets.Charlie,
       appearsAtStart: false,
     },

@@ -3,15 +3,28 @@ import {
   DomClasses, EventTypes, GameStates, SceneNames, ScenePositions,
 } from './constants';
 import findScene from './scene-manager';
-import { assetsUrl, waitForChoice, waitForClick } from './helpers';
+import {
+  assetsUrl,
+  introSceneFadeOut,
+  introSceneDisplay,
+  loadScene,
+  waitForChoice,
+  waitForClick,
+} from './helpers';
 
 // init all the game vars and build out DOM
 let currentScene = findScene(SceneNames.NssLunchRoom);
 let running = true;
-let cursorDelayCount = 0;
+let delayCounter = 0;
 
 const canvas = document.createElement('div');
 canvas.classList.add('canvas');
+
+const sceneLoading = document.createElement('div');
+sceneLoading.classList.add('scene-loading', 'hidden');
+
+const sceneLoadingText = document.createElement('div');
+sceneLoadingText.classList.add('scene-loading--text');
 
 const canvasOverlayWrapper = document.createElement('div');
 canvasOverlayWrapper.classList.add('canvas-overlay--wrapper');
@@ -39,6 +52,9 @@ canvasBottomChoices.classList.add('canvas-bottom-choices');
 
 document.body.appendChild(canvas);
 document.body.appendChild(canvasBottomTextWrapper);
+document.body.appendChild(sceneLoading);
+
+sceneLoading.appendChild(sceneLoadingText);
 
 canvasOverlayWrapper.appendChild(canvasLeftOverlay);
 canvasOverlayWrapper.appendChild(canvasCenterOverlay);
@@ -49,6 +65,10 @@ canvas.appendChild(canvasBottomChoices);
 
 canvasBottomTextWrapper.appendChild(canvasBottomText);
 canvasBottomTextWrapper.appendChild(canvasBottomTextCursor);
+
+const insertScene = (helper) => {
+  currentScene.sceneFlow.unshift(helper());
+};
 
 // main game logic and helper functions
 const advanceSceneFlow = () => {
@@ -66,12 +86,12 @@ const toggleCursor = (hide) => {
     return;
   }
 
-  cursorDelayCount += 1;
+  delayCounter += 1;
 
-  if (cursorDelayCount >= 30) {
+  if (delayCounter >= 30) {
     canvasBottomTextCursor.classList.toggle('hidden');
 
-    cursorDelayCount = 0;
+    delayCounter = 0;
   }
 };
 
@@ -147,7 +167,7 @@ const presentingTextState = (advanceToWaitingForClick) => {
     advanceSceneFlow();
 
     if (advanceToWaitingForClick) {
-      currentScene.sceneFlow.unshift(waitForClick());
+      insertScene(waitForClick);
     }
   }
 };
@@ -158,6 +178,7 @@ const waitingForClickState = (event) => {
     clearText();
 
     advanceSceneFlow();
+    delayCounter = 0;
   }
 
   toggleCursor();
@@ -207,10 +228,48 @@ const switchActorAssetState = (currentFlow) => {
   enterActor(actor);
 };
 
+const initializeIntroScene = () => {
+  sceneLoadingText.innerHTML = currentScene.title;
+  sceneLoading.style.opacity = 1;
+  sceneLoading.classList.remove('hidden');
+};
+
+const cleanupIntroScene = () => {
+  sceneLoading.classList.add('hidden');
+  sceneLoadingText.innerHTML = null;
+
+  delayCounter = 0;
+
+  advanceSceneFlow();
+};
+
+const introSceneFadeOutState = () => {
+  sceneLoading.style.opacity = 1 - delayCounter;
+
+  delayCounter += 0.01;
+
+  if (delayCounter > 1) {
+    cleanupIntroScene();
+  }
+};
+
+const introSceneState = () => {
+  delayCounter += 1;
+
+  if (delayCounter > 240) {
+    advanceSceneFlow();
+
+    delayCounter = 0;
+
+    insertScene(introSceneFadeOut);
+    insertScene(loadScene);
+  }
+};
+
 const gameUpdate = (event) => {
   const [currentFlow] = currentScene.sceneFlow;
   switch (currentFlow.state) {
-    case GameStates.LoadingScene:
+    case GameStates.LoadScene:
       loadingSceneState();
       break;
 
@@ -259,8 +318,7 @@ const gameUpdate = (event) => {
 
       presentingChoicesState(currentFlow);
       advanceSceneFlow();
-      currentScene.sceneFlow.unshift(waitForChoice());
-
+      insertScene(waitForChoice);
       break;
 
     case GameStates.WaitingForChoice:
@@ -278,6 +336,21 @@ const gameUpdate = (event) => {
     case GameStates.SwitchingActorAsset:
       switchActorAssetState(currentFlow);
       advanceSceneFlow();
+      break;
+
+    case GameStates.IntroScene:
+      initializeIntroScene();
+
+      advanceSceneFlow();
+      insertScene(introSceneDisplay);
+      break;
+
+    case GameStates.IntroSceneDisplay:
+      introSceneState();
+      break;
+
+    case GameStates.IntroSceneFadeOut:
+      introSceneFadeOutState();
       break;
 
     default:

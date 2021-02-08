@@ -4,7 +4,7 @@ import {
 } from '../constants';
 import {
   enterActor,
-  loadScene,
+  introScene,
   nextScene,
   presentChoices,
   presentText,
@@ -14,6 +14,7 @@ import {
 
 export default {
   background: BackgroundAssets.NssLunchRoom,
+  title: 'Nashville Software School 2017',
   actors: [
     {
       name: Actors.Matt,
@@ -32,7 +33,7 @@ export default {
     'Matt: Okay. Let\'s get outta here!',
   ],
   sceneFlow: [
-    loadScene(),
+    introScene(),
     presentText(),
     presentText(),
     enterActor(Actors.Matt),

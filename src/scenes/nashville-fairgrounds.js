@@ -7,7 +7,7 @@ import {
 import {
   enterActor,
   exitActor,
-  loadScene,
+  introScene,
   nextScene,
   presentChoices,
   presentText,
@@ -17,6 +17,7 @@ import {
 
 export default {
   background: BackgroundAssets.NashvilleFairGrounds,
+  title: 'Nashville State Fairgrounds',
   actors: [
     {
       name: Actors.Matt,
@@ -53,7 +54,7 @@ export default {
     'Matt: Glad to be making a new friend (and a really cute one at that).',
   ],
   sceneFlow: [
-    loadScene(),
+    introScene(),
     presentText(),
     switchActorAsset(Actors.Matt, ActorAssets.MattPoint),
     presentText(),

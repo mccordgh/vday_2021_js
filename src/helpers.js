@@ -4,7 +4,10 @@ export const assetsUrl = (name) => `url(${AssetsDir}/${name})`;
 
 export const enterActor = (actor) => ({ state: GameStates.EnterActor, options: { actor } });
 export const exitActor = (actor) => ({ state: GameStates.ExitActor, options: { actor } });
-export const loadScene = () => ({ state: GameStates.LoadingScene });
+export const loadScene = () => ({ state: GameStates.LoadScene });
+export const introScene = () => ({ state: GameStates.IntroScene });
+export const introSceneDisplay = () => ({ state: GameStates.IntroSceneDisplay });
+export const introSceneFadeOut = () => ({ state: GameStates.IntroSceneFadeOut });
 export const nextScene = () => ({ state: GameStates.NextScene });
 export const presentText = () => ({ state: GameStates.PresentingText });
 export const presentTextForChoice = () => ({ state: GameStates.PresentingTextForChoice });

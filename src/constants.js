@@ -2,7 +2,10 @@
 export const GameStates = Object.freeze({
   EnterActor: 'EnterActor',
   ExitActor: 'ExitActor',
-  LoadingScene: 'LoadingScene',
+  LoadScene: 'LoadScene',
+  IntroScene: 'IntroScene',
+  IntroSceneDisplay: 'IntroSceneDisplay',
+  IntroSceneFadeOut: 'IntroSceneFadeOut',
   NextScene: 'NextScene',
   PresentingChoices: 'PresentingChoices',
   PresentingText: 'PresentingText',
@@ -29,9 +32,9 @@ export const Actors = Object.freeze({
 });
 
 export const SceneNames = Object.freeze({
-  NssLunchRoom: 'NSS Lunch Room',
-  OldNssParkingLot: 'NSS Parking Lot',
   NashvilleFairGrounds: 'NashvilleFairGrounds',
+  NssLunchRoom: 'NSSLunchRoom',
+  OldNssParkingLot: 'NSSParkingLot',
 });
 
 export const AssetsDir = 'assets';
