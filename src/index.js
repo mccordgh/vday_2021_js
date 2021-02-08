@@ -11,7 +11,7 @@ let running = true;
 let cursorDelayCount = 0;
 
 const canvas = document.createElement('div');
-canvas.classList.add('canvas', 'img-parent');
+canvas.classList.add('canvas');
 
 const canvasOverlayWrapper = document.createElement('div');
 canvasOverlayWrapper.classList.add('canvas-overlay--wrapper');
@@ -176,7 +176,7 @@ const nextSceneState = (name) => {
   currentScene = findScene(name);
 };
 
-const findActorByName = (currentFlow) => {
+const findActorForCurrentFlow = (currentFlow) => {
   const name = currentFlow.options.actor;
 
   return currentScene.actors.find((actor) => actor.name === name);
@@ -196,6 +196,15 @@ const presentingChoicesState = (currentFlow) => {
 
 const clearChoices = () => {
   canvasBottomChoices.innerHTML = null;
+};
+
+const switchActorAssetState = (currentFlow) => {
+  const { options } = currentFlow;
+
+  const actor = findActorForCurrentFlow(currentFlow);
+  actor.asset = options.asset;
+
+  enterActor(actor);
 };
 
 const gameUpdate = (event) => {
@@ -228,13 +237,13 @@ const gameUpdate = (event) => {
       break;
 
     case GameStates.EnterActor:
-      enterActor(findActorByName(currentFlow));
+      enterActor(findActorForCurrentFlow(currentFlow));
 
       advanceSceneFlow();
       break;
 
     case GameStates.ExitActor:
-      exitActor(findActorByName(currentFlow));
+      exitActor(findActorForCurrentFlow(currentFlow));
 
       advanceSceneFlow();
       break;
@@ -264,6 +273,11 @@ const gameUpdate = (event) => {
           advanceSceneFlow();
         }
       }
+      break;
+
+    case GameStates.SwitchingActorAsset:
+      switchActorAssetState(currentFlow);
+      advanceSceneFlow();
       break;
 
     default:

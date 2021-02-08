@@ -9,18 +9,9 @@ html, body {
     height: 100%;
     font-size: 10px;
     font-family: Helvetica, sans-serif, Arial, sans-serif;
-    
-    /* Arial (sans-serif)
-    Verdana (sans-serif)
-    Helvetica (sans-serif)
-    Tahoma (sans-serif)
-    Trebuchet MS (sans-serif)
-    Times New Roman (serif)
-    Georgia (serif)
-    Garamond (serif)
-    Courier New (monospace)
-    Brush Script MT (cursive) */
-
+    font-weight: bold;
+    text-shadow: 1px 1px 1px black;
+    color: white;
 }
 
 body {
@@ -35,6 +26,7 @@ body {
     flex: 1;
     justify-content: center;
     position: relative;
+    background-size: cover;
 }
 
 img {
@@ -62,10 +54,11 @@ img {
 }
 
 .canvas-overlay {
-    display: flex;
-    flex: 0.33;
-    height: 100%;
-    max-width: 25%;
+    align-self: flex-end;
+    height: 50%;
+    width: 30%;
+    min-height: 400px;
+    min-width: 400px;
     background-size: contain;
 }
 
@@ -82,8 +75,10 @@ img {
 }
 
 .canvas-bottom-text--wrapper {
-    border: 2px solid grey;
-    outline: 2px solid black;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    border: 0.3rem solid black;
     position: relative;
     flex: 0.25;
     left: 0;
@@ -91,7 +86,9 @@ img {
 }
 
 .canvas-bottom-text {
-    background-color: bisque;
+    /* background-color: bisque; */
+    background-color: #e899dc;
+    background-image: linear-gradient(315deg, #e899dc 0%, #d387ab 74%);
     font-size: 3.5rem;
     padding: 2rem;
     height: 100%;
@@ -100,12 +97,16 @@ img {
 
 
 .canvas-bottom-text-cursor {
-    height: 3.5rem;
-    width: 2rem;
-    background-color: black;
+    height: 4rem;
+    width: 4rem;
+    border-style: solid;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    border-width: 1rem;
+    transform: rotateY(0deg) rotate(45deg) scaleX(1.0) scaleY(0.8);
     position: absolute;
-    bottom: 2rem;
-    right: 2rem;
+    bottom: 3rem;
+    right: 3rem;
     z-index: 99;
 }
 
@@ -122,7 +123,7 @@ img {
 }
 
 .canvas-bottom-choices--option {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(33, 33, 33, 0.4);
     font-size: 2rem;
     padding: 2rem;
     height: 100%;
@@ -131,8 +132,23 @@ img {
     cursor: pointer;
 }
 
+.canvas-bottom-choices--option:before {
+  content: '\2665';
+  color: #e899dc;
+  margin-right: 1.4rem;
+}
+
+/* .canvas-bottom-choices--option::before {
+    content: '&#9829';
+    position: absolute;
+    height: 2rem;
+    width: 2rem;
+    background-color: red;
+    border: 1px solid black;
+} */
+
 .canvas-bottom-choices--option:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(33, 33, 33, 0.8);
 }
 
 .hidden {

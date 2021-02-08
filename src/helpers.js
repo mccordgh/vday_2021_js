@@ -12,5 +12,9 @@ export const presentChoices = (choices) => ({
   state: GameStates.PresentingChoices,
   options: { choices },
 });
+export const switchActorAsset = (actor, asset) => ({
+  state: GameStates.SwitchingActorAsset,
+  options: { actor, asset },
+});
 export const waitForClick = () => ({ state: GameStates.WaitingForClick });
 export const waitForChoice = () => ({ state: GameStates.WaitingForChoice });
