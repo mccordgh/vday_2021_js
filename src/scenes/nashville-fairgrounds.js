@@ -15,13 +15,13 @@ export default {
   background: 'nashville_fairgrounds.png',
   actors: [
     {
-      name: Actors.Matt, position: ScenePositions.Center, asset: 'small_water_mccordinator_matt.jpeg', appearsAtStart: true,
+      name: Actors.Matt, position: ScenePositions.Center, asset: 'matt_wave.png', appearsAtStart: true,
     },
     {
-      name: Actors.Charlie, position: ScenePositions.Left, asset: 'charlie.jpg', appearsAtStart: false,
+      name: Actors.Charlie, position: ScenePositions.Left, asset: 'charlie.png', appearsAtStart: false,
     },
     {
-      name: Actors.Stella, position: ScenePositions.Right, asset: 'stella.jpg', appearsAtStart: false,
+      name: Actors.Stella, position: ScenePositions.Right, asset: 'stella.png', appearsAtStart: false,
     },
   ],
   text: [

@@ -14,7 +14,7 @@ export default {
   background: 'nss_lunchroom.png',
   actors: [
     {
-      name: Actors.Matt, position: ScenePositions.Right, asset: 'small_water_mccordinator_matt.jpeg', appearsAtStart: false,
+      name: Actors.Matt, position: ScenePositions.Right, asset: 'matt_wave.png', appearsAtStart: false,
     },
   ],
   text: [

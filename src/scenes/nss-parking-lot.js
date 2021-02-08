@@ -9,10 +9,10 @@ export default {
   background: 'old_nss_parking_lot.png',
   actors: [
     {
-      name: Actors.Matt, position: ScenePositions.Left, asset: 'small_water_mccordinator_matt.jpeg', appearsAtStart: true,
+      name: Actors.Matt, position: ScenePositions.Left, asset: 'matt_wave.png', appearsAtStart: true,
     },
     {
-      name: Actors.Charlie, position: ScenePositions.Center, asset: 'charlie.jpg', appearsAtStart: false,
+      name: Actors.Charlie, position: ScenePositions.Center, asset: 'charlie.png', appearsAtStart: false,
     },
   ],
   text: [
