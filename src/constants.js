@@ -1,8 +1,12 @@
 // fake enums !!
 export const GameStates = Object.freeze({
+  Ending: 'Ending',
   EnterActor: 'EnterActor',
   ExitActor: 'ExitActor',
   LoadScene: 'LoadScene',
+  IntroDelayedScene: 'IntroDelayedScene',
+  IntroFinalScene: 'IntroFinalScene',
+  IntroSceneDelayedDisplay: 'IntroSceneDelayedDisplay',
   IntroScene: 'IntroScene',
   IntroSceneDisplay: 'IntroSceneDisplay',
   IntroSceneFadeOut: 'IntroSceneFadeOut',
@@ -27,11 +31,16 @@ export const ScenePositions = Object.freeze({
 
 export const Actors = Object.freeze({
   Matt: 'Matt',
+  MosDef: 'Mos Def',
   Charlie: 'Charlie',
   Stella: 'Stella',
 });
 
 export const SceneNames = Object.freeze({
+  Intro: 'Intro',
+  Ending: 'Ending',
+  KoiSushiOutside: 'KoiSushiOutside',
+  KoiSushiInside: 'KoiSushiInside',
   NashvilleFairGrounds: 'NashvilleFairGrounds',
   NssLunchRoom: 'NSSLunchRoom',
   OldNssParkingLot: 'NSSParkingLot',
@@ -54,7 +63,7 @@ export const ActorAssets = Object.freeze({
   MattSurprise: 'matt_surprise.png',
   MattThink: 'matt_think.png',
   MattWave: 'matt_wave.png',
-  MosDef: 'mos_def.webp',
+  MosDef: 'mos_def.png',
   Stella: 'stella.png',
 });
 
@@ -68,4 +77,4 @@ export const BackgroundAssets = Object.freeze({
   NssGameNight: 'nss_game_night_small.webp',
   NssLunchRoom: 'nss_lunchroom.png',
   OldNssParkingLot: 'old_nss_parking_lot.png',
-})
+});

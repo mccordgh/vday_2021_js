@@ -2,6 +2,7 @@ import {
   ActorAssets,
   Actors,
   BackgroundAssets,
+  SceneNames,
   ScenePositions,
 } from '../constants';
 import {
@@ -44,7 +45,7 @@ export default {
     'Charlie: BORK! :D',
     '????: *TONGUE WHIP* :)',
     'Matt: Hello, girl! Who are you??',
-    '????: Stella.',
+    '????: My name is Stella.',
     'Stella: *scampers off*',
     'Matt: Oh My! Bye Yiddle Girl!',
     'Matt: What a cute pooper! I hope we meet her again!',
@@ -52,6 +53,7 @@ export default {
     'Matt: Very cool. I believe it! You are way cooler than I realized at first :)',
     'Matt: While I was a musician for about 15 years, I\'m looking forward to getting away from that whole scene for a good while.',
     'Matt: Glad to be making a new friend (and a really cute one at that).',
+    'Matt: How about we get dinner this weekend?',
   ],
   sceneFlow: [
     introScene(),
@@ -78,7 +80,8 @@ export default {
     presentText(),
     switchActorAsset(Actors.Matt, ActorAssets.MattSmile),
     presentText(),
+    presentText(),
     nextScene(),
   ],
-  nextScene: undefined,
+  nextScene: SceneNames.KoiSushiOutside,
 };

@@ -5,6 +5,7 @@ import {
 import findScene from './scene-manager';
 import {
   assetsUrl,
+  ending,
   introSceneFadeOut,
   introSceneDisplay,
   loadScene,
@@ -13,7 +14,7 @@ import {
 } from './helpers';
 
 // init all the game vars and build out DOM
-let currentScene = findScene(SceneNames.NssLunchRoom);
+let currentScene = findScene(SceneNames.Intro);
 let running = true;
 let delayCounter = 0;
 
@@ -345,12 +346,30 @@ const gameUpdate = (event) => {
       insertScene(introSceneDisplay);
       break;
 
+    case GameStates.IntroDelayedScene:
+      initializeIntroScene();
+
+      advanceSceneFlow();
+      insertScene(waitForClick);
+      break;
+
+    case GameStates.IntroFinalScene:
+      initializeIntroScene();
+
+      advanceSceneFlow();
+      insertScene(ending);
+      break;
+
     case GameStates.IntroSceneDisplay:
       introSceneState();
       break;
 
     case GameStates.IntroSceneFadeOut:
       introSceneFadeOutState();
+      break;
+
+    case GameStates.Ending:
+      // Do nothing keep showing the ending screen
       break;
 
     default:
