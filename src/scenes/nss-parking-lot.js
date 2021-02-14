@@ -5,7 +5,7 @@ import {
 import {
   enterActor,
   exitActor,
-  loadScene,
+  introScene,
   nextScene,
   presentChoices,
   presentText,
@@ -15,6 +15,7 @@ import {
 
 export default {
   background: BackgroundAssets.OldNssParkingLot,
+  title: 'The Parking Lot',
   actors: [
     {
       name: Actors.Matt,
@@ -42,7 +43,7 @@ export default {
     'Matt: C\'mon! It\'ll be fun!',
   ],
   sceneFlow: [
-    loadScene(),
+    introScene(),
     presentText(),
     switchActorAsset(Actors.Matt, ActorAssets.MattThink),
     presentText(),
@@ -52,8 +53,8 @@ export default {
     presentText(),
     presentText(),
     presentText(),
-    exitActor(Actors.Charlie),
     switchActorAsset(Actors.Matt, ActorAssets.MattPoint),
+    exitActor(Actors.Charlie),
     presentText(),
     presentText(),
     switchActorAsset(Actors.Matt, ActorAssets.MattLove),
